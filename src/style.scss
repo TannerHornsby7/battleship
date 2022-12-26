@@ -54,7 +54,7 @@ body {
 
 .body{
   display: grid;
-  grid-template-columns: 1fr 1fr 1fr;
+  grid-template-columns: 1fr 2fr 1fr;
   height: 100%;
 
   .info {
@@ -110,6 +110,74 @@ body {
         height: 30px;
         background-color: black;
       }
+    }
+  }
+
+  .game{
+    display: grid;
+    place-items: center;
+    .fullboard {
+      place-items: center;
+      height: 95%;
+      width: 75%;
+      background-color: $darkcolor;
+      display: grid;
+      grid-template-rows: 1fr 1fr;
+      row-gap: 5px;
+    }
+    .board{
+      display: grid;
+      grid-template-columns: repeat(10, 1fr);
+      width:90%;
+      height:90%;
+      background-color: black;
+      
+    }
+    .cell {
+      margin: 1px;
+      padding: none;
+      box-sizing: border-box;
+    }
+    .ecell {
+      &:hover {
+        cursor: pointer;
+        transition: all 0.2s ease;
+        background-color: white;
+      }
+    }
+    p{
+      padding: 0px;
+      margin: 0px;
+      border: 0px;
+      align-self: center;
+      justify-self: center;
+      margin-bottom: -50px;
+      text-align: center;
+    }
+    .empty {
+      background-color: $lightcolor;
+    }
+  
+    .miss {
+      background-color: $lightcolor;
+      color: black;
+    }
+    .sunk {
+      background-color: rgb(154, 9, 9);
+    }
+    .yours {
+      background-color: black;
+      &:hover {
+        box-sizing: border-box;
+        background-color: $lightcolor;
+        cursor: pointer;
+      }
+    }
+    .hit {
+      font-size: 1em;
+      background-color: black;
+      color: rgb(154, 9, 9);
+      font-weight: bolder;
     }
   }
 }

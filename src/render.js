@@ -1,6 +1,6 @@
 import './style.scss';
 
-export function layout(b1, b2, ship_deck) {
+export function layout(eboard, pboard, ship_deck) {
     // Setting Body
     const h = document.createElement('div');
     const b = document.createElement('div');
@@ -20,9 +20,10 @@ export function layout(b1, b2, ship_deck) {
     setDock(dock, ship_deck);
     info_sect.appendChild(key);
     info_sect.appendChild(dock);
-    
+
     // -board section
     const board_sect = document.createElement('div');
+    setBoards(board_sect, eboard, pboard);
 
     // -reset/win section
     const reset_sect = document.createElement('div');
@@ -116,11 +117,8 @@ function setDock(dock, ships_deck){
 
     ships_deck.sort();
     for(let i = 0; i < ships_deck.length; i++){
-        console.log(ships_deck[i]);
         let tmp_boat = boat.cloneNode();
         let ship_length = Math.floor(ships_deck[i] / 5 * 100);
-        console.log(ship_length);
-        
         tmp_boat.setAttribute("style",`width:${ship_length}%`);
         boat_lot.appendChild(tmp_boat);
     }
@@ -132,6 +130,104 @@ function setDock(dock, ships_deck){
     dock.appendChild(dock_footer);
 }
 
+function setBoards(board_sect, eboard, pboard){
+    board_sect.classList.add('game');
+    const fullboard = document.createElement('div');
+    fullboard.classList.add('fullboard');
+    const top_board = document.createElement('div');
+    const bot_board = document.createElement('div');
+    setEBoard(top_board, eboard);
+    setPBoard(bot_board, pboard);
+    fullboard.appendChild(top_board);
+    fullboard.appendChild(bot_board);
+
+    board_sect.appendChild(fullboard);
+}
+
+function setEBoard(b_ele, b_arr){
+    b_ele.classList.add('board');
+    const emptyCell = document.createElement('div');
+    const hitCell = document.createElement('div');
+    const missCell = document.createElement('div');
+    const sunkCell = document.createElement('div');
+    hitCell.classList.add('hit', 'cell', 'ecell');
+    missCell.classList.add('miss', 'cell', 'ecell');
+    sunkCell.classList.add('sunk', 'cell', 'ecell');
+    emptyCell.classList.add('empty', 'cell', 'ecell');
+    emptyCell.textContent = '';
+
+    // 0 empty, 1 hit, 2 miss, 3 sunk, 4 yours
+    // add event listeners to each node as well!
+    for(let i = 0; i < b_arr.length; i++){
+        for(let j = 0; j < b_arr.length; j++){
+            let tmp;
+            if(b_arr[i][j] == 1) {
+                tmp = hitCell.cloneNode();
+                const x = document.createElement('p');
+                x.textContent = 'X';
+                tmp.appendChild(x);
+            }
+            else if(b_arr[i][j] == 2) {
+                tmp = missCell.cloneNode();
+                const x = document.createElement('p');
+                x.textContent = 'X';
+                tmp.appendChild(x);
+            }
+            else if(b_arr[i][j] == 3){
+                tmp = sunkCell.cloneNode();
+            } else {
+                tmp = emptyCell.cloneNode();
+            }
+            tmp.id = 'r' + i + 'c' + j;
+
+            b_ele.appendChild(tmp);
+        }
+    }
+}
+
+function setPBoard(b_ele, b_arr){
+    b_ele.classList.add('board');
+    const yourCell = document.createElement('div');
+    const emptyCell = document.createElement('div');
+    const hitCell = document.createElement('div');
+    const missCell = document.createElement('div');
+    const sunkCell = document.createElement('div');
+    hitCell.classList.add('hit', 'cell', 'yours');
+    missCell.classList.add('miss', 'cell');
+    sunkCell.classList.add('sunk', 'cell');
+    yourCell.classList.add('yours', 'cell');
+    emptyCell.classList.add('empty', 'cell');
+
+    // 0 empty, 1 hit, 2 miss, 3 sunk, 4 your ship
+    for(let i = 0; i < b_arr.length; i++){
+        for(let j = 0; j < b_arr.length; j++){
+            let tmp;
+            if(b_arr[i][j] == 0) {
+                tmp = emptyCell.cloneNode();
+            }
+            else if(b_arr[i][j] == 1) {
+                tmp = hitCell.cloneNode();
+                const x = document.createElement('p');
+                x.textContent = 'X';
+                tmp.appendChild(x);
+            }
+            else if(b_arr[i][j] == 2) {
+                tmp = missCell.cloneNode();
+                const x = document.createElement('p');
+                x.textContent = 'X';
+                tmp.appendChild(x);
+            }
+            else if(b_arr[i][j] == 3) {
+                tmp = sunkCell.cloneNode();
+            }
+            else {
+                tmp = yourCell.cloneNode();
+            }
+            tmp.id = 'r' + i + 'c' + j;
+            b_ele.appendChild(tmp);
+        }
+    }
+}
 /*
 TO-DO:
 create header and footer dom module
