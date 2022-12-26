@@ -60,8 +60,9 @@ body {
   .info {
     display: grid;
     grid-template-rows: 1fr 2fr;
-    place-items: center;
     .key{
+      align-self: center;
+      justify-self: center;
       border: 2px solid $darkcolor;
       padding: 2px 10px 5px 10px;
       width: 50%;
@@ -89,6 +90,7 @@ body {
       }
     }
     .dock{
+      justify-self: center;
       h2,
       h5 {
         text-align: center;

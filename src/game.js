@@ -19,7 +19,7 @@ function main(){
     //     //convert that box to a loc and pass it into hit
     //     //if hit confirmed check wc & switch to ai turn, else request a new box
     // }
-    layout([], [], [2, 3, 3, 4]);
+    layout([], [], [2, 3, 3, 4, 5]);
 }
 
 main();

@@ -5,10 +5,43 @@ export function layout(b1, b2, ship_deck) {
     const h = document.createElement('div');
     const b = document.createElement('div');
     const f = document.createElement('div');
+
+    setHead(h);
+    setFoot(f);
+
+    // SETTING BODY
+    b.classList.add('body');
+    // -info section
+    const info_sect = document.createElement('div');
+    info_sect.classList.add('info');
+    const key = document.createElement('div');
+    const dock = document.createElement('div');
+    setKey(key);
+    setDock(dock, ship_deck);
+    info_sect.appendChild(key);
+    info_sect.appendChild(dock);
+    
+    // -board section
+    const board_sect = document.createElement('div');
+
+    // -reset/win section
+    const reset_sect = document.createElement('div');
+
+    // appending each section to body
+    b.appendChild(info_sect);
+    b.appendChild(board_sect);
+    b.appendChild(reset_sect);
+
+    // APPENDING ELEMENTS
+    document.body.appendChild(h);
+    document.body.appendChild(b);
+    document.body.appendChild(f);
+}
+
+function setHead(h){
+    // SETTING HEADER
     const empty = document.createElement('div');
     empty.textContent = '';
-
-    // SETTING HEADER
     h.classList.add('head');
     const title = document.createElement('h1');
     const gh = document.createElement('button');
@@ -23,49 +56,18 @@ export function layout(b1, b2, ship_deck) {
     h.appendChild(empty);
     h.appendChild(title);
     h.appendChild(gh);
+}
 
+function setFoot(f){
     // SETTING FOOTER
     f.classList.add('foot');
     const name = document.createElement('h4');
     name.textContent = '@tannerhornsby7';
     f.appendChild(name);
-
-    // SETTING BODY
-    b.classList.add('body');
-    // -info section
-    const info_sect = document.createElement('div');
-    info_sect.classList.add('info');
-    const key = document.createElement('div');
-    const dock = document.createElement('div');
-    key.classList.add('key');
-    dock.classList.add('dock');
-
-
-    renderKey(key);
-    renderDock(dock);
-    
-    // -board section
-    const board_sect = document.createElement('div');
-
-    // -reset/win section
-    const reset_sect = document.createElement('div');
-    // -appending each section to info
-    info_sect.appendChild(key);
-    info_sect.appendChild(dock);
-
-
-    // appending each section to body
-    b.appendChild(info_sect);
-    b.appendChild(board_sect);
-    b.appendChild(reset_sect);
-
-    // APPENDING ELEMENTS
-    document.body.appendChild(h);
-    document.body.appendChild(b);
-    document.body.appendChild(f);
 }
 
-function renderKey(key){
+function setKey(key){
+    key.classList.add('key');
     const hit = document.createElement('h2');
     const miss = document.createElement('h2');
     const sunk = document.createElement('div');
@@ -100,7 +102,8 @@ function renderKey(key){
 
 }
 
-function renderDock(dock, ships_deck){
+function setDock(dock, ships_deck){
+    dock.classList.add('dock');
     if(!ships_deck) return;
 
     const dock_head = document.createElement('h2');
@@ -113,31 +116,14 @@ function renderDock(dock, ships_deck){
 
     ships_deck.sort();
     for(let i = 0; i < ships_deck.length; i++){
+        console.log(ships_deck[i]);
         let tmp_boat = boat.cloneNode();
-        let ship_length = Math.Floor(ships_deck[i] / 5) * 10;
-        b1.setAttribute("style","width:${ship_length}%");
-        boat_lot.appendChild()
+        let ship_length = Math.floor(ships_deck[i] / 5 * 100);
+        console.log(ship_length);
+        
+        tmp_boat.setAttribute("style",`width:${ship_length}%`);
+        boat_lot.appendChild(tmp_boat);
     }
-    const b1 = boat.cloneNode();
-    b1.setAttribute("style","width:20%");
-    const b2 = boat.cloneNode();
-    const b22 = boat.cloneNode();
-    b2.setAttribute("style","width:40%");
-    b22.setAttribute("style","width:40%");
-    const b3 = boat.cloneNode();
-    b3.setAttribute("style","width:60%");
-    const b4 = boat.cloneNode();
-    b4.setAttribute("style","width:80%");
-    const b5 = boat.cloneNode();
-    b5.setAttribute("style","width:100%");
-
-    boat_lot.appendChild(b1);
-    boat_lot.appendChild(b2);
-    boat_lot.appendChild(b22);
-    boat_lot.appendChild(b3);
-    boat_lot.appendChild(b4);
-    boat_lot.appendChild(b5);
-
     dock_head.textContent = 'Place Your Ships';
     dock_footer.textContent = 'Press R to rotate a ship!'
 
