@@ -1,5 +1,3 @@
-import { exit } from "process";
-
 function Ship(length){
     return {
         "length": length, 
@@ -38,6 +36,12 @@ function Gameboard(){ // 10x10 board # x letters
                 console.log('invalid y location:' + loc[1]);
                 return false;
             }
+            if(this.hit_att.includes(loc) || 
+            this.miss_att.includes(loc)) {
+                console.log('you have already attacked this location'
+                 + loc[0] + ' , ' + los[1]);
+                 return false;
+            }
             return true;
         },
 
@@ -70,9 +74,7 @@ function Gameboard(){ // 10x10 board # x letters
 
         recieveAttack(loc){
             // check that the provided hit is valid
-            if(!this.validLoc(loc) ||
-             this.hit_att.includes(loc) || 
-             this.miss_att.includes(loc)) return;
+            if(!this.validLoc(loc)) return;
             
             if(this.board[loc[0]][loc[1]] !== 0){
                 this.board[loc[0]][loc[1]].hit();
@@ -94,5 +96,30 @@ function Gameboard(){ // 10x10 board # x letters
     }
 }
 
+function Player(){
+    return {
+        "pboard": Gameboard(),
+        "aiboard": Gameboard(),
+        attackAI(loc){
+            if(this.aiboard.validLoc(loc)) {
+                this.aiboard.recieveAttack(loc);
+                return true;
+            } else {
+                return false;
+            }
+        },
+        attackP(){
+            let randx = Math.floor(Math.random() * 10);
+            let randy = Math.floor(Math.random() * 10);
+            if(this.pboard.validLoc([randx, randy])) {
+                this.pboard.recieveAttack([randx, randy]);
+                return true;
+            }
+            else{
+                return false;
+            }
+        }
+    };
+}
 
-export { Ship, Gameboard }
+export { Ship, Gameboard, Player }
