@@ -29,11 +29,11 @@ function Gameboard(){ // 10x10 board # x letters
         ],
         validLoc(loc){
             if(!(0 <= loc[0] && loc[0] <= 9)) {
-                console.log('invalid x location:' + loc[0]);
+                console.log('invalid y location:' + loc[0]);
                 return false;
             }
             if(!(0 <= loc[1] && loc[1] <= 9)) {
-                console.log('invalid y location:' + loc[1]);
+                console.log('invalid x location:' + loc[1]);
                 return false;
             }
             if(this.hit_att.includes(loc) || 
