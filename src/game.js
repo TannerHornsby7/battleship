@@ -1,5 +1,5 @@
 import { Ship, Gameboard, Player } from "./logic";
-
+import { layout } from "./render"
 function main(){
     const player = Player();
     player.pboard.placeShip(Ship(2), [0,0], 0); // top left facing right
@@ -19,6 +19,7 @@ function main(){
     //     //convert that box to a loc and pass it into hit
     //     //if hit confirmed check wc & switch to ai turn, else request a new box
     // }
+    layout([], [], []);
 }
 
 main();

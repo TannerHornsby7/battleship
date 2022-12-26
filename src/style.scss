@@ -2,18 +2,39 @@
 
 // theme colors
 $lightcolor: ivory;
-$darkcolor: rgb(53, 7, 7);
+$darkcolor: rgb(20, 0, 102);
 
 // setting theme
 @mixin theme($dark: true) {
   @if ($dark) {
     color: $lightcolor;
     background-color: $darkcolor;
-    box-shadow: 2px 2px 2px $lightcolor;
+    // box-shadow: 2px 2px 2px $lightcolor;
   } @else {
     color: $darkcolor;
     background-color: $lightcolor;
     box-shadow: 2px 2px 2px $darkcolor;
   }
   transition: all 0.5s ease;
+}
+
+.head{
+  font-size: 2em;
+  display: grid;
+  grid-template-columns: 1fr 6fr 1fr;
+  place-items: center;
+  @include theme;
+  height: 100px;
+  button {
+    font-size: .5em;
+    height: 40px;
+    width: 60%;
+    @include theme(false);
+    background-color: aliceblue;
+    color: black;
+    &:hover {
+      cursor: pointer;
+      @include theme(false);
+    }
+  }
 }

@@ -5,7 +5,7 @@ const { truncate } = require('fs');
 module.exports = {
     mode: 'development',
     entry: {
-        index: './src/index.js',
+        render: './src/render.js',
         game: './src/game.js',
         logic: './src/logic.js',
     },
