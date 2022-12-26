@@ -141,4 +141,8 @@ test('Ai generated move is recieved', () => {
     expect(test_player.pboard.miss_att.length).toBe(1);
 });
 
+test('Player is up returns true', () =>{
+    expect(Player().pup).toBeTruthy();
+})
+
 

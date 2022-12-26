@@ -45,7 +45,7 @@ function Gameboard(){ // 10x10 board # x letters
             return true;
         },
 
-        placeShip(ship, loc, direction) { 
+        placeShip(ship, loc, direction = 0) { 
 
             this.validLoc(loc);
             let tmp_loc = [0, 0];
@@ -98,6 +98,7 @@ function Gameboard(){ // 10x10 board # x letters
 
 function Player(){
     return {
+        "pup": true,
         "pboard": Gameboard(),
         "aiboard": Gameboard(),
         attackAI(loc){

@@ -1,0 +1,39 @@
+const path = require('path');
+const HtmlWebpackPlugin = require('html-webpack-plugin');
+const { truncate } = require('fs');
+
+module.exports = {
+    mode: 'development',
+    entry: {
+        index: './src/index.js',
+        game: './src/game.js',
+        logic: './src/logic.js',
+    },
+    devtool: 'inline-source-map',
+    plugins: [
+        new HtmlWebpackPlugin({
+          title: 'Development',
+        }),
+      ],
+    output: {
+    filename: '[name].bundle.js',
+    path: path.resolve(__dirname, 'dist'),
+    clean: true,
+    },
+    module: {
+    rules: [
+      {
+        test: /\.s[ac]ss$/i,
+        use: ['style-loader', 'css-loader', 'sass-loader'],
+      },
+      {
+        test: /\.(png|svg|jpg|jpeg|gif)$/i,
+        type: 'asset/resource',
+      },
+      {
+        test: /\.(woff|woff2|eot|ttf|otf)$/i,
+        type: 'asset/resource',
+      },
+    ],
+  },
+};
