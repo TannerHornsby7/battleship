@@ -9,7 +9,7 @@ recall layout on click
 export function layout(player) {
     let eboard = player.aiboard;
     let pboard = player.pboard;
-    let ship_deck = player.ship_deck;
+    let ship_deck = player.pboard.ship_deck;
 
     // Setting Body
     const h = document.createElement('div');
@@ -42,6 +42,11 @@ export function layout(player) {
     reset.textContent = 'RESET';
     reset.classList.add('resetbtn');
     reset_sect.appendChild(reset);
+    reset.onclick = () => {
+        player.reset();
+        document.body.innerHTML = '';
+        layout(player);
+    }
 
     // appending each section to body
     b.appendChild(info_sect);
@@ -52,6 +57,7 @@ export function layout(player) {
     document.body.appendChild(h);
     document.body.appendChild(b);
     document.body.appendChild(f);
+
 }
 
 function setHead(h){
@@ -251,7 +257,6 @@ function setPBoard(b_ele, gameboard){
 
 function addEventListener(player, cell){
         cell.addEventListener('click', ()=>{
-            console.log('hi');
             let r = parseInt(cell.id.charAt(1));
             let c = parseInt(cell.id.charAt(3));
             player.attackAI([r, c]);

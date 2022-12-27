@@ -15,6 +15,7 @@ function Ship(length){
 // creates a gameboard which places ships and recieves attacks on its board
 function Gameboard(){ // 10x10 board # x letters
     return {
+        "ship_deck": [2, 3, 3, 4, 5],
         "hit_att": [],
         "miss_att": [],
         "board": [
@@ -29,7 +30,7 @@ function Gameboard(){ // 10x10 board # x letters
             [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
             [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
         ],
-        validLoc(loc){
+        validLoc(loc, place = false){
             if(!(0 <= loc[0] && loc[0] <= 9)) {
                 console.log('invalid y location:' + loc[0]);
                 return false;
@@ -44,12 +45,15 @@ function Gameboard(){ // 10x10 board # x letters
                  + loc[0] + ' , ' + loc[1]);
                  return false;
             }
+            if(place == true && this.board[loc[0]][loc[1]] !== 0) {
+                console.log('there is already a ship here');
+                return false;
+            }
             return true;
         },
 
         placeShip(ship, loc, direction = 0) { 
 
-            this.validLoc(loc);
             let tmp_loc = [0, 0];
 
             for(let i = 0; i < ship.length; i++){
@@ -70,7 +74,11 @@ function Gameboard(){ // 10x10 board # x letters
                         tmp_loc[0] = loc[0];
                         tmp_loc[1] = loc[1] + i;
                 }
-                if(this.validLoc(tmp_loc)) this.board[tmp_loc[0]][tmp_loc[1]] = ship;
+                if(this.validLoc(tmp_loc, true)) {
+                    this.board[tmp_loc[0]][tmp_loc[1]] = ship;
+                } else {
+                    return false;
+                }
             }
         },
 
@@ -95,6 +103,21 @@ function Gameboard(){ // 10x10 board # x letters
             }
             return false;
         },
+        placeRandomShips(){
+            while(this.ship_deck.length){
+                let ship_len = this.ship_deck.pop();
+                let placed = false;
+                let ship = Ship(ship_len);
+
+                while(placed == false) {
+                let randdir = Math.floor(Math.random() * 4);
+                let randx = Math.floor(Math.random() * 10);
+                let randy = Math.floor(Math.random() * 10);
+
+                placed = this.placeShip(ship, [randx, randy], randdir);
+                }
+            }
+        }
     }
 }
 
@@ -122,6 +145,11 @@ function Player(){
             else{
                 return false;
             }
+        },
+        reset(){
+            this.aiboard = Gameboard();
+            this.pboard = Gameboard();
+            this.aiboard.placeRandomShips();
         },
     };
 }
