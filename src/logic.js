@@ -1,3 +1,4 @@
+// creates a ship of a specified length
 function Ship(length){
     return {
         "length": length, 
@@ -11,6 +12,7 @@ function Ship(length){
     }
 }
 
+// creates a gameboard which places ships and recieves attacks on its board
 function Gameboard(){ // 10x10 board # x letters
     return {
         "hit_att": [],
@@ -92,10 +94,11 @@ function Gameboard(){ // 10x10 board # x letters
                 }
             }
             return false;
-        }
+        },
     }
 }
 
+// creates a player who can perform game actions on relevant gameboards
 function Player(){
     return {
         "pup": true,
@@ -119,10 +122,11 @@ function Player(){
             else{
                 return false;
             }
-        }
+        },
     };
 }
 
+// converts gameboard ship objects to integers for printing
 function shipsToInts(gameboard){
     let int_arr =  [
         [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],

@@ -22,13 +22,8 @@ function main(){
     player.aiboard.recieveAttack([4,0]);
     player.aiboard.recieveAttack([5,0]);
 
-
-
-    // const enemy_cells = document.querySelectorAll('.ecell');
-    // enemy_cells.forEach((cell) => {
-
-    // })
-    // think i need to use promises 
+    // think i need to use promises or a pub/sub pattern, ill do research into
+    // both next session!
 
     layout(shipsToInts(player.aiboard), shipsToInts(player.pboard), [2, 3, 3, 4, 5]);
 }

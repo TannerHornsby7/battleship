@@ -233,6 +233,18 @@ function setPBoard(b_ele, b_arr){
         }
     }
 }
+
+function addEventListeners(cb){
+    const cells = document.querySelectorAll('.ecells');
+    cells.forEach((cell)=>{
+        cell.addEventListener('click', ()=>{
+            let r = parseInt(cell.id.charAt(1));
+            let c = parseInt(cell.id.charAt(3));
+            cb([r, c]);
+        })
+    })
+}
+
 /*
 TO-DO:
 create header and footer dom module
