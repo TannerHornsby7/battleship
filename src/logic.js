@@ -103,6 +103,7 @@ function Gameboard(){ // 10x10 board # x letters
             }
             return false;
         },
+        // places a ship randomly
         placeRandomShips(){
             while(this.ship_deck.length){
                 let ship_len = this.ship_deck.pop();
