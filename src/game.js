@@ -25,7 +25,7 @@ function main(){
     // think i need to use promises or a pub/sub pattern, ill do research into
     // both next session!
 
-    layout(shipsToInts(player.aiboard), shipsToInts(player.pboard), [2, 3, 3, 4, 5]);
+    layout(player, [2, 3, 3, 4, 5]);
 }
 
 function attack(player, cell) {

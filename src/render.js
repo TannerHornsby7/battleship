@@ -1,6 +1,16 @@
 import './style.scss';
 
-export function layout(eboard, pboard, ship_deck) {
+/*
+pass gameboards to layout
+add event listeners to ecells on creation which attack and 
+recall layout on click
+*/
+
+export function layout(player) {
+    let eboard = player.aiboard;
+    let pboard = player.pboard;
+    let ship_deck = player.ship_deck;
+
     // Setting Body
     const h = document.createElement('div');
     const b = document.createElement('div');
@@ -23,7 +33,7 @@ export function layout(eboard, pboard, ship_deck) {
 
     // -board section
     const board_sect = document.createElement('div');
-    setBoards(board_sect, eboard, pboard);
+    setBoards(player, board_sect, eboard, pboard);
 
     // -reset/win section
     const reset_sect = document.createElement('div');
@@ -135,13 +145,13 @@ function setDock(dock, ships_deck){
     dock.appendChild(dock_footer);
 }
 
-function setBoards(board_sect, eboard, pboard){
+function setBoards(player, board_sect, eboard, pboard){
     board_sect.classList.add('game');
     const fullboard = document.createElement('div');
     fullboard.classList.add('fullboard');
     const top_board = document.createElement('div');
     const bot_board = document.createElement('div');
-    setEBoard(top_board, eboard);
+    setEBoard(player, top_board, eboard);
     setPBoard(bot_board, pboard);
     fullboard.appendChild(top_board);
     fullboard.appendChild(bot_board);
@@ -149,7 +159,7 @@ function setBoards(board_sect, eboard, pboard){
     board_sect.appendChild(fullboard);
 }
 
-function setEBoard(b_ele, b_arr){
+function setEBoard(player, b_ele, gameboard){
     b_ele.classList.add('board');
     const emptyCell = document.createElement('div');
     const hitCell = document.createElement('div');
@@ -163,25 +173,27 @@ function setEBoard(b_ele, b_arr){
 
     // 0 empty, 1 hit, 2 miss, 3 sunk, 4 yours
     // add event listeners to each node as well!
-    for(let i = 0; i < b_arr.length; i++){
-        for(let j = 0; j < b_arr.length; j++){
+    for(let i = 0; i < gameboard.board.length; i++){
+        for(let j = 0; j < gameboard.board.length; j++){
             let tmp;
-            if(b_arr[i][j] == 1) {
+            if(gameboard.board[i][j] && gameboard.board[i][j].isSunk()){
+                tmp = sunkCell.cloneNode();
+            } 
+            else if(gameboard.hit_att.includes(JSON.stringify([i,j]))) {
                 tmp = hitCell.cloneNode();
                 const x = document.createElement('p');
                 x.textContent = 'X';
                 tmp.appendChild(x);
             }
-            else if(b_arr[i][j] == 2) {
+            else if(gameboard.miss_att.includes(JSON.stringify([i,j]))) {
                 tmp = missCell.cloneNode();
                 const x = document.createElement('p');
                 x.textContent = 'X';
                 tmp.appendChild(x);
             }
-            else if(b_arr[i][j] == 3){
-                tmp = sunkCell.cloneNode();
-            } else {
+            else {
                 tmp = emptyCell.cloneNode();
+                addEventListener(player, tmp);
             }
             tmp.id = 'r' + i + 'c' + j;
 
@@ -190,7 +202,7 @@ function setEBoard(b_ele, b_arr){
     }
 }
 
-function setPBoard(b_ele, b_arr){
+function setPBoard(b_ele, gameboard){
     b_ele.classList.add('board');
     const yourCell = document.createElement('div');
     const emptyCell = document.createElement('div');
@@ -204,45 +216,49 @@ function setPBoard(b_ele, b_arr){
     emptyCell.classList.add('empty', 'cell');
 
     // 0 empty, 1 hit, 2 miss, 3 sunk, 4 your ship
-    for(let i = 0; i < b_arr.length; i++){
-        for(let j = 0; j < b_arr.length; j++){
+    for(let i = 0; i < gameboard.board.length; i++){
+        for(let j = 0; j < gameboard.board.length; j++){
             let tmp;
-            if(b_arr[i][j] == 0) {
-                tmp = emptyCell.cloneNode();
+            
+            if(gameboard.board[i][j] && gameboard.board[i][j].isSunk()) {
+                console.log('sunk');
+                tmp = sunkCell.cloneNode();
             }
-            else if(b_arr[i][j] == 1) {
+            else if(gameboard.hit_att.includes(JSON.stringify([i,j]))) {
                 tmp = hitCell.cloneNode();
                 const x = document.createElement('p');
                 x.textContent = 'X';
                 tmp.appendChild(x);
             }
-            else if(b_arr[i][j] == 2) {
+            else if(gameboard.miss_att.includes(JSON.stringify([i,j]))) {
                 tmp = missCell.cloneNode();
                 const x = document.createElement('p');
                 x.textContent = 'X';
                 tmp.appendChild(x);
             }
-            else if(b_arr[i][j] == 3) {
-                tmp = sunkCell.cloneNode();
+            else if(!gameboard.board[i][j]) {
+                tmp = emptyCell.cloneNode();
             }
             else {
                 tmp = yourCell.cloneNode();
             }
+
             tmp.id = 'r' + i + 'c' + j;
             b_ele.appendChild(tmp);
         }
     }
 }
 
-function addEventListeners(cb){
-    const cells = document.querySelectorAll('.ecells');
-    cells.forEach((cell)=>{
+function addEventListener(player, cell){
         cell.addEventListener('click', ()=>{
+            console.log('hi');
             let r = parseInt(cell.id.charAt(1));
             let c = parseInt(cell.id.charAt(3));
-            cb([r, c]);
+            player.attackAI([r, c]);
+            player.attackP();
+            document.body.innerHTML = '';
+            layout(player);
         })
-    })
 }
 
 /*

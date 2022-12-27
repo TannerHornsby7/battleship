@@ -126,42 +126,4 @@ function Player(){
     };
 }
 
-// converts gameboard ship objects to integers for printing
-function shipsToInts(gameboard){
-    let int_arr =  [
-        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-    ];
-    // console.log(gameboard.hit_att);
-    // console.log(gameboard.miss_att);
-    for(let i = 0; i < gameboard.board.length; i++){
-        for(let j = 0; j < gameboard.board.length; j++){
-            if(gameboard.board[i][j] && gameboard.board[i][j].isSunk()) {
-                int_arr[i][j] = 3;
-            }
-            else if (gameboard.miss_att.length && gameboard.miss_att.includes(JSON.stringify([i, j]))) {
-                int_arr[i][j] = 2;
-            }
-            else if (gameboard.hit_att.length && gameboard.hit_att.includes(JSON.stringify([i, j]))) {
-                int_arr[i][j] = 1;
-            }
-            else if(gameboard.board[i][j] && !gameboard.board[i][j].isSunk()){
-                int_arr[i][j] = 4;
-            }
-            else {
-                int_arr[i][j] = 0;
-            }
-        }
-    }
-    return int_arr;
-}
-
-export { Ship, Gameboard, Player, shipsToInts }
+export { Ship, Gameboard, Player }
