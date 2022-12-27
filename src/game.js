@@ -15,6 +15,14 @@ function main(){
     player.aiboard.placeShip(Ship(3), [9,9], 2); // bottom right facing left
     player.aiboard.placeShip(Ship(4), [9,0], 3); // bottom left facing up
     player.aiboard.placeShip(Ship(5), [0,9], 2); // top right facing left
+    player.aiboard.recieveAttack([0,0]);
+    player.aiboard.recieveAttack([1,0]);
+    player.aiboard.recieveAttack([2,0]);
+    player.aiboard.recieveAttack([3,0]);
+    player.aiboard.recieveAttack([4,0]);
+    player.aiboard.recieveAttack([5,0]);
+
+
 
     // const enemy_cells = document.querySelectorAll('.ecell');
     // enemy_cells.forEach((cell) => {

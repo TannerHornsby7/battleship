@@ -27,6 +27,11 @@ export function layout(eboard, pboard, ship_deck) {
 
     // -reset/win section
     const reset_sect = document.createElement('div');
+    reset_sect.classList.add('reset');
+    const reset = document.createElement('button');
+    reset.textContent = 'RESET';
+    reset.classList.add('resetbtn');
+    reset_sect.appendChild(reset);
 
     // appending each section to body
     b.appendChild(info_sect);

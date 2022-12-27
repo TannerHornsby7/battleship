@@ -60,6 +60,9 @@ body {
   .info {
     display: grid;
     grid-template-rows: 1fr 2fr;
+    .boat {
+      cursor: pointer;
+    }
     .key{
       align-self: center;
       justify-self: center;
@@ -178,6 +181,26 @@ body {
       background-color: black;
       color: rgb(154, 9, 9);
       font-weight: bolder;
+    }
+  }
+  
+  .reset {
+    display: flex;
+    justify-content: center;
+    align-items: flex-end;
+    button {
+      margin-bottom: 15px;
+      justify-self: flex-end;
+      height: 50px;
+      width: 80%;
+      background-color: rgb(154, 9, 9);
+      color: $lightcolor;
+      &:hover{
+        cursor: pointer;
+        background-color: $lightcolor;
+        border: 2px solid rgb(154, 9, 9);
+        color: $darkcolor;
+      }
     }
   }
 }

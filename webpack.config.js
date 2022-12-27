@@ -1,6 +1,5 @@
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
-const { truncate } = require('fs');
 
 module.exports = {
     mode: 'development',
@@ -12,7 +11,7 @@ module.exports = {
     devtool: 'inline-source-map',
     plugins: [
         new HtmlWebpackPlugin({
-          title: 'Development',
+          title: '🛥️ Battleship',
         }),
       ],
     output: {
