@@ -71,7 +71,6 @@ function setHead(h){
     title.textContent = 'BATTLESHIP';
     gh.textContent = 'GITHUB'
     gh.onclick = function (){
-        console.log('btn click');
         open('https://github.com/TannerHornsby7/odin-battleship');
     };
 
@@ -227,7 +226,6 @@ function setPBoard(b_ele, gameboard){
             let tmp;
             
             if(gameboard.board[i][j] && gameboard.board[i][j].isSunk()) {
-                console.log('sunk');
                 tmp = sunkCell.cloneNode();
             }
             else if(gameboard.hit_att.includes(JSON.stringify([i,j]))) {

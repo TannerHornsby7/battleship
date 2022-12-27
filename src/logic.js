@@ -32,31 +32,31 @@ function Gameboard(){ // 10x10 board # x letters
         ],
         validLoc(loc, place = false){
             if(!(0 <= loc[0] && loc[0] <= 9)) {
-                console.log('invalid y location:' + loc[0]);
+                console.log('invalid y location: ' + loc[0]);
                 return false;
             }
             if(!(0 <= loc[1] && loc[1] <= 9)) {
-                console.log('invalid x location:' + loc[1]);
+                console.log('invalid x location: ' + loc[1]);
+                return false;
+            }
+            if(place == true && this.board[loc[0]][loc[1]] != 0) {
+                console.log('there is already a ship here');
                 return false;
             }
             if(this.hit_att.includes(JSON.stringify(loc)) || 
             this.miss_att.includes(JSON.stringify(loc))) {
-                console.log('you have already attacked this location'
+                console.log('you have already attacked this location '
                  + loc[0] + ' , ' + loc[1]);
                  return false;
-            }
-            if(place == true && this.board[loc[0]][loc[1]] !== 0) {
-                console.log('there is already a ship here');
-                return false;
             }
             return true;
         },
 
         placeShip(ship, loc, direction = 0) { 
-
-            let tmp_loc = [0, 0];
+            let ship_locs = [];
 
             for(let i = 0; i < ship.length; i++){
+                let tmp_loc = [0, 0];
                 switch(direction) {
                     case 1: // down
                         tmp_loc[0] = loc[0] + i;
@@ -74,12 +74,15 @@ function Gameboard(){ // 10x10 board # x letters
                         tmp_loc[0] = loc[0];
                         tmp_loc[1] = loc[1] + i;
                 }
-                if(this.validLoc(tmp_loc, true)) {
-                    this.board[tmp_loc[0]][tmp_loc[1]] = ship;
-                } else {
+                if(!this.validLoc(tmp_loc, true)) {
                     return false;
                 }
+                ship_locs.push(tmp_loc);
             }
+            ship_locs.forEach((seg) =>{
+                this.board[seg[0]][seg[1]] = ship;
+            });
+            return true;
         },
 
         recieveAttack(loc){
@@ -111,9 +114,9 @@ function Gameboard(){ // 10x10 board # x letters
                 let ship = Ship(ship_len);
 
                 while(placed == false) {
-                let randdir = Math.floor(Math.random() * 4);
-                let randx = Math.floor(Math.random() * 10);
-                let randy = Math.floor(Math.random() * 10);
+                let randdir = Math.floor(Math.abs(Math.random()) * 4);
+                let randx = Math.floor(Math.abs(Math.random()) * 9);
+                let randy = Math.floor(Math.abs(Math.random()) * 9);
 
                 placed = this.placeShip(ship, [randx, randy], randdir);
                 }
@@ -148,6 +151,8 @@ function Player(){
             }
         },
         reset(){
+            this.aiboard = null; // reseting boards;
+            this.pboard = null;
             this.aiboard = Gameboard();
             this.pboard = Gameboard();
             this.aiboard.placeRandomShips();
