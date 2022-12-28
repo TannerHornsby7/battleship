@@ -15,7 +15,8 @@ function Ship(length){
 // creates a gameboard which places ships and recieves attacks on its board
 function Gameboard(){ // 10x10 board # x letters
     return {
-        "ship_deck": [2, 3, 3, 4, 5],
+        "standing": [10],
+        "ship_deck": [10],
         "hit_att": [],
         "miss_att": [],
         "board": [
@@ -87,13 +88,24 @@ function Gameboard(){ // 10x10 board # x letters
 
         recieveAttack(loc){
             // check that the provided hit is valid
-            if(!this.validLoc(loc)) return;
+            if(!this.validLoc(loc)) return 0;
             
             if(this.board[loc[0]][loc[1]] !== 0){
                 this.board[loc[0]][loc[1]].hit();
                 this.hit_att.push(JSON.stringify(loc));
+                if(this.board[loc[0]][loc[1]].isSunk()) {
+                    let idx = this.standing.findIndex(
+                        (val) => val == this.board[loc[0]][loc[1]].length
+                    );
+                    this.standing.splice(idx, 1);
+                    if(!this.standing.length) {
+                        return 69;
+                    }
+                    return 1;
+                }
             } else {
                 this.miss_att.push(JSON.stringify(loc));
+                return 1;
             }
         },
 
@@ -132,12 +144,7 @@ function Player(){
         "pboard": Gameboard(),
         "aiboard": Gameboard(),
         attackAI(loc){
-            if(this.aiboard.validLoc(loc)) {
-                this.aiboard.recieveAttack(loc);
-                return true;
-            } else {
-                return false;
-            }
+            return this.aiboard.recieveAttack(loc);
         },
         attackP(){
             let randx = Math.floor(Math.random() * 10);
@@ -150,11 +157,14 @@ function Player(){
                 return false;
             }
         },
-        reset(){
+        reset(player_place_random = false){
             this.aiboard = null; // reseting boards;
             this.pboard = null;
             this.aiboard = Gameboard();
             this.pboard = Gameboard();
+            if(player_place_random) {
+                this.pboard.placeRandomShips();
+            }
             this.aiboard.placeRandomShips();
         },
     };

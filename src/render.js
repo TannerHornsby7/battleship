@@ -1,21 +1,19 @@
 import './style.scss';
 
-/*
-pass gameboards to layout
-add event listeners to ecells on creation which attack and 
-recall layout on click
-*/
-
+// RENDERS THE GAME
 export function layout(player) {
+    // LOCAL VARIABLES FOR EASIER UNDERSTANDING
     let eboard = player.aiboard;
     let pboard = player.pboard;
     let ship_deck = player.pboard.ship_deck;
+    let sunk_deck = player.aiboard.standing;
 
-    // Setting Body
+    // CREATING SECTIONS
     const h = document.createElement('div');
     const b = document.createElement('div');
     const f = document.createElement('div');
 
+    // SETTING HEADER AND FOOTER
     setHead(h);
     setFoot(f);
 
@@ -23,13 +21,25 @@ export function layout(player) {
     b.classList.add('body');
     // -info section
     const info_sect = document.createElement('div');
-    info_sect.classList.add('info');
     const key = document.createElement('div');
     const dock = document.createElement('div');
+    const place_random = document.createElement('button');
+
+    info_sect.classList.add('info');
+    place_random.id = 'rp';
+
     setKey(key);
-    setDock(dock, ship_deck);
+    (ship_deck.length != 0) ? setDock(dock, ship_deck) : setDock(dock, sunk_deck, true);
+    place_random.textContent = 'PLACE MY SHIPS';
+    place_random.onclick = () => {
+        player.reset(true);
+        document.body.innerHTML = '';
+        layout(player);
+    }
+
     info_sect.appendChild(key);
     info_sect.appendChild(dock);
+    info_sect.appendChild(place_random);
 
     // -board section
     const board_sect = document.createElement('div');
@@ -123,17 +133,25 @@ function setKey(key){
 
 }
 
-function setDock(dock, ships_deck){
-    dock.classList.add('dock');
-    if(!ships_deck) return;
-
+function setDock(dock, ships_deck, placed = false){
     const dock_head = document.createElement('h2');
     const boat_lot = document.createElement('div');
     const boat = document.createElement('div');
+    const dock_footer = document.createElement('h5');
+
+    dock.classList.add('dock');
     boat.textContent = '';
     boat.classList.add('boat');
     boat_lot.classList.add('boat_lot');
-    const dock_footer = document.createElement('h5');
+
+    if(placed) {
+        boat.classList.add('enemy');
+        dock_head.textContent = 'Remaining Enemy Ships:';
+        dock_footer.textContent = 'Keep Firing!'
+    } else {
+        dock_head.textContent = 'Place Your Ships';
+        dock_footer.textContent = 'Press R to rotate a ship!'
+    }
 
     ships_deck.sort();
     for(let i = 0; i < ships_deck.length; i++){
@@ -142,8 +160,7 @@ function setDock(dock, ships_deck){
         tmp_boat.setAttribute("style",`width:${ship_length}%`);
         boat_lot.appendChild(tmp_boat);
     }
-    dock_head.textContent = 'Place Your Ships';
-    dock_footer.textContent = 'Press R to rotate a ship!'
+    
 
     dock.appendChild(dock_head);
     dock.appendChild(boat_lot);
@@ -254,16 +271,40 @@ function setPBoard(b_ele, gameboard){
 }
 
 function addEventListener(player, cell){
-        cell.addEventListener('click', ()=>{
-            let r = parseInt(cell.id.charAt(1));
-            let c = parseInt(cell.id.charAt(3));
-            player.attackAI([r, c]);
-            player.attackP();
-            document.body.innerHTML = '';
-            layout(player);
-        })
+    cell.addEventListener('click', ()=>{
+        let r = parseInt(cell.id.charAt(1));
+        let c = parseInt(cell.id.charAt(3));
+        let wc = player.attackAI([r, c]);
+        if(wc == 0) {
+            return;
+        }
+        document.body.innerHTML = '';
+        layout(player);
+        if(wc == 69) {
+            winCondition(player, 'p');
+        }
+        if(player.attackP() == 69) {
+            winCondition(player, 'c');
+        }
+    });
 }
 
+function winCondition(player, param){
+    player.reset();
+    document.body.innerHTML = '';
+    const end_screen = document.createElement('div');
+    end_screen.classList.add('gg');
+    end_screen.textContent = (param == 'p') ? 'User Wins' : 'AI Wins';
+    document.body.appendChild(end_screen);
+    setTimeout(function() {
+        document.body.innerHTML = '';
+        layout(player);
+    }, 3000);
+}
+
+function newGameForm(){
+
+}
 /*
 TO-DO:
 create header and footer dom module

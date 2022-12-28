@@ -92,6 +92,7 @@ body {
         color: rgb(154, 9, 9);
       }
     }
+
     .dock{
       justify-self: center;
       h2,
@@ -112,6 +113,24 @@ body {
       .boat{
         height: 30px;
         background-color: black;
+      }
+      .enemy {
+        background-color: rgb(154, 9, 9);
+      }
+    }
+
+    #rp {
+      margin-bottom: 15px;
+      justify-self: flex-end;
+      height: 50px;
+      width: 80%;
+      background-color: $darkcolor;
+      color: $lightcolor;
+      &:hover{
+        cursor: pointer;
+        background-color: $lightcolor;
+        border: 2px solid $darkcolor;
+        color: $darkcolor;
       }
     }
   }
@@ -203,4 +222,12 @@ body {
       }
     }
   }
+}
+
+.gg{
+  display: grid;
+  width: 100%;
+  height: 100%;
+  font-size: 5em;
+  place-content: center;
 }
