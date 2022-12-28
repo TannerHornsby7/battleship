@@ -18,6 +18,7 @@ function Gameboard(){ // 10x10 board # x letters
         "name": 'AI',
         "standing": [2, 3, 3, 4, 5],
         "ship_deck": [2, 3, 3, 4, 5],
+        "hit_neighbors": [],
         "hit_att": [],
         "miss_att": [],
         "board": [
@@ -32,6 +33,8 @@ function Gameboard(){ // 10x10 board # x letters
             [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
             [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
         ],
+
+        // determines validity of location
         validLoc(loc, place = false){
             if(!(0 <= loc[0] && loc[0] <= 9)) {
                 console.log('invalid y location: ' + loc[0]);
@@ -54,6 +57,25 @@ function Gameboard(){ // 10x10 board # x letters
             return true;
         },
 
+        // returns an array of neighboring locations
+        neighbors(loc){
+            let r = loc[0];
+            let c = loc[1];
+            let n1 = [r + 1, c];
+            let n2 = [r - 1, c];
+            let n3 = [r, c - 1];
+            let n4 = [r, c + 1];
+            let possib = [n1, n2, n3, n4];
+            let moves = [];
+            possib.forEach((move)=>{
+                if(this.validLoc(move)){
+                    moves.push(move);
+                }
+            })
+            return moves
+        },
+
+        //places a ship given a loc and optional direction [0R,1D,2L,3U]
         placeShip(ship, loc, direction = 0) { 
             let ship_locs = [];
 
@@ -87,6 +109,7 @@ function Gameboard(){ // 10x10 board # x letters
             return true;
         },
 
+        // returns 2 for sink, 1 for hit, 0 for invalid loc, -1 for miss
         recieveAttack(loc){
             // check that the provided hit is valid
             if(!this.validLoc(loc)) return 0;
@@ -94,31 +117,29 @@ function Gameboard(){ // 10x10 board # x letters
             if(this.board[loc[0]][loc[1]] !== 0){
                 this.board[loc[0]][loc[1]].hit();
                 this.hit_att.push(JSON.stringify(loc));
+
                 if(this.board[loc[0]][loc[1]].isSunk()) {
                     let idx = this.standing.findIndex(
                         (val) => val == this.board[loc[0]][loc[1]].length
                     );
                     this.standing.splice(idx, 1);
+
                     if(!this.standing.length) {
+                        //hit sink and game winner!
                         return 69;
                     }
-                    return 1;
+                    //hit and sink
+                    return 2;
                 }
+                //hit no sink
+                return 1;
             } else {
                 this.miss_att.push(JSON.stringify(loc));
-                return 1;
+                //miss
+                return -1;
             }
         },
 
-        shipsStanding(){
-            for(let i = 0; i < 10; i++){
-                for(let j = 0; j < 10; j++){
-                    if(this.board[i][j] == 0) continue;
-                    if(!this.board[i][j].isSunk()) return true;
-                }
-            }
-            return false;
-        },
         // places a ship randomly
         placeRandomShips(){
             while(this.ship_deck.length){
@@ -141,22 +162,36 @@ function Gameboard(){ // 10x10 board # x letters
 // creates a player who can perform game actions on relevant gameboards
 function Player(){
     return {
-        "pup": true,
+        "hard": true,
         "pboard": Gameboard(),
         "aiboard": Gameboard(),
         attackAI(loc){
             return this.aiboard.recieveAttack(loc);
         },
         attackP(){
-            let randx = Math.floor(Math.random() * 10);
-            let randy = Math.floor(Math.random() * 10);
-            if(this.pboard.validLoc([randx, randy])) {
-                this.pboard.recieveAttack([randx, randy]);
-                return true;
+            if(this.hard && this.pboard.hit_neighbors.length){
+                console.log('hardmode activated');
+                let att_loc = this.pboard.hit_neighbors.shift();
+                let att_res = this.pboard.recieveAttack(att_loc);
+
+                // if the final shot is a hit, we add its neighbors to hit neighbors
+                if(att_res == 1){
+                    console.log('calculated hit :0');
+                    console.log(att_loc);
+                    this.pboard.hit_neighbors = this.pboard.hit_neighbors.concat(this.pboard.neighbors(att_loc));
+                }
+            } else {
+                let randx = Math.floor(Math.random() * 10);
+                let randy = Math.floor(Math.random() * 10);
+                let att = this.pboard.recieveAttack([randx, randy]);
+                if(att == 1) {
+                    console.log('output of neighbors: ' + this.pboard.neighbors([randx, randy]));
+                    this.pboard.hit_neighbors = this.pboard.hit_neighbors.concat(this.pboard.neighbors([randx, randy]));
+                    console.log(this.pboard.hit_neighbors);
+                    // console.log(this.pboard.hit_neighbors);
+                }
             }
-            else{
-                return false;
-            }
+            
         },
         reset(player_place_random = false){
             this.aiboard = null; // reseting boards;

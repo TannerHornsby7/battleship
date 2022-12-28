@@ -39,7 +39,9 @@ export function layout(player) {
 
     info_sect.appendChild(key);
     info_sect.appendChild(dock);
-    info_sect.appendChild(place_random);
+    if(ship_deck.length != 0) {
+        info_sect.appendChild(place_random);
+    }
 
     // -board section
     const board_sect = document.createElement('div');
@@ -48,6 +50,16 @@ export function layout(player) {
     // -reset/win section
     const reset_sect = document.createElement('div');
     reset_sect.classList.add('reset');
+    const hard = document.createElement('button');
+    hard.textContent = 'RESET';
+    hard.classList.add('resetbtn');
+    reset_sect.appendChild(hard);
+    hard.onclick = () => {
+        player.reset();
+        player.hard = true;
+        document.body.innerHTML = '';
+        layout(player);
+    }
     const reset = document.createElement('button');
     reset.textContent = 'RESET';
     reset.classList.add('resetbtn');
@@ -231,7 +243,7 @@ function setPBoard(b_ele, gameboard){
     const hitCell = document.createElement('div');
     const missCell = document.createElement('div');
     const sunkCell = document.createElement('div');
-    hitCell.classList.add('hit', 'cell', 'yours');
+    hitCell.classList.add('hit', 'cell');
     missCell.classList.add('miss', 'cell');
     sunkCell.classList.add('sunk', 'cell');
     yourCell.classList.add('yours', 'cell');
@@ -257,7 +269,7 @@ function setPBoard(b_ele, gameboard){
                 x.textContent = 'X';
                 tmp.appendChild(x);
             }
-            else if(!gameboard.board[i][j]) {
+            else if(!gameboard.board[i][j].length) {
                 tmp = emptyCell.cloneNode();
             }
             else {
@@ -275,6 +287,7 @@ function addEventListener(player, cell){
         let r = parseInt(cell.id.charAt(1));
         let c = parseInt(cell.id.charAt(3));
         let wc = player.attackAI([r, c]);
+        let ap = player.attackP();
         if(wc == 0) {
             return;
         }
@@ -283,7 +296,7 @@ function addEventListener(player, cell){
         if(wc == 69) {
             winCondition(player, 'p');
         }
-        if(player.attackP() == 69) {
+        if(ap == 69) {
             winCondition(player, 'c');
         }
     });
