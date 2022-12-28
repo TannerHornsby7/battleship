@@ -6,7 +6,7 @@ export function layout(player) {
     let eboard = player.aiboard;
     let pboard = player.pboard;
     let ship_deck = player.pboard.ship_deck;
-    let sunk_deck = player.aiboard.standing;
+    let sink_deck = player.aiboard.standing;
 
     // CREATING SECTIONS
     const h = document.createElement('div');
@@ -29,7 +29,7 @@ export function layout(player) {
     place_random.id = 'rp';
 
     setKey(key);
-    (ship_deck.length != 0) ? setDock(dock, ship_deck) : setDock(dock, sunk_deck, true);
+    (ship_deck.length != 0) ? setDock(dock, ship_deck) : setDock(dock, sink_deck, true);
     place_random.textContent = 'PLACE MY SHIPS';
     place_random.onclick = () => {
         player.reset(true);
@@ -50,25 +50,7 @@ export function layout(player) {
     // -reset/win section
     const reset_sect = document.createElement('div');
     reset_sect.classList.add('reset');
-    const hard = document.createElement('button');
-    hard.textContent = 'RESET';
-    hard.classList.add('resetbtn');
-    reset_sect.appendChild(hard);
-    hard.onclick = () => {
-        player.reset();
-        player.hard = true;
-        document.body.innerHTML = '';
-        layout(player);
-    }
-    const reset = document.createElement('button');
-    reset.textContent = 'RESET';
-    reset.classList.add('resetbtn');
-    reset_sect.appendChild(reset);
-    reset.onclick = () => {
-        player.reset();
-        document.body.innerHTML = '';
-        layout(player);
-    }
+    setResetSection(player, reset_sect);
 
     // appending each section to body
     b.appendChild(info_sect);
@@ -313,6 +295,49 @@ function winCondition(player, param){
         document.body.innerHTML = '';
         layout(player);
     }, 3000);
+}
+
+function setResetSection(player, reset_sect) {
+    // --pvp mode btn
+    const pvp = document.createElement('button');
+    pvp.textContent = 'PVP MODE';
+    pvp.classList.add('pvpbtn');
+    reset_sect.appendChild(pvp);
+    pvp.onclick = () => {
+        document.body.innerHTML = '';
+        layout(player);
+    }
+
+    // --easy mode btn
+    const easy = document.createElement('button');
+    easy.textContent = 'EASY MODE';
+    easy.classList.add('easybtn');
+    reset_sect.appendChild(easy);
+    easy.onclick = () => {
+        player.hard = false;
+        document.body.innerHTML = '';
+        layout(player);
+    }
+    // --hard mode btn
+    const hard = document.createElement('button');
+    hard.textContent = 'HARD MODE';
+    hard.classList.add('hardbtn');
+    reset_sect.appendChild(hard);
+    hard.onclick = () => {
+        player.hard = true;
+        document.body.innerHTML = '';
+        layout(player);
+    }
+
+    const reset = document.createElement('button');
+    reset.textContent = 'RESET';
+    reset.classList.add('resetbtn');
+    reset_sect.appendChild(reset);
+    reset.onclick = () => {
+        player.reset();
+        document.body.innerHTML = '';
+        layout(player);
+    }
 }
 
 function newGameForm(){

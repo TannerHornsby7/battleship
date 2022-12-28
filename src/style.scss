@@ -202,8 +202,9 @@ body {
   
   .reset {
     display: flex;
-    justify-content: center;
-    align-items: flex-end;
+    flex-direction: column;
+    justify-content: flex-end;
+    align-items: center;
     button {
       margin-bottom: 15px;
       justify-self: flex-end;
@@ -215,6 +216,33 @@ body {
         cursor: pointer;
         background-color: $lightcolor;
         border: 2px solid rgb(154, 9, 9);
+        color: $darkcolor;
+      }
+    }
+    .hardbtn {
+      background-color: black;
+      &:hover{
+        cursor: pointer;
+        background-color: $lightcolor;
+        border: 2px solid black;
+        color: black;
+      }
+    }
+    .easybtn {
+      background-color: darkgreen;
+      &:hover{
+        cursor: pointer;
+        background-color: $lightcolor;
+        border: 2px solid darkgreen;
+        color: darkgreen;
+      }
+    }
+    .pvpbtn {
+      background-color: $darkcolor;
+      &:hover{
+        cursor: pointer;
+        background-color: $lightcolor;
+        border: 2px solid $darkcolor;
         color: $darkcolor;
       }
     }

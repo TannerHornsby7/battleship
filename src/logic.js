@@ -170,28 +170,29 @@ function Player(){
         },
         attackP(){
             if(this.hard && this.pboard.hit_neighbors.length){
-                console.log('hardmode activated');
                 let att_loc = this.pboard.hit_neighbors.shift();
                 let att_res = this.pboard.recieveAttack(att_loc);
+                
+                
 
                 // if the final shot is a hit, we add its neighbors to hit neighbors
                 if(att_res == 1){
-                    console.log('calculated hit :0');
-                    console.log(att_loc);
                     this.pboard.hit_neighbors = this.pboard.hit_neighbors.concat(this.pboard.neighbors(att_loc));
                 }
             } else {
                 let randx = Math.floor(Math.random() * 10);
                 let randy = Math.floor(Math.random() * 10);
                 let att = this.pboard.recieveAttack([randx, randy]);
+                while(att == 0){
+                    randx = Math.floor(Math.random() * 10);
+                    randy = Math.floor(Math.random() * 10);
+                    att = this.pboard.recieveAttack([randx, randy]);
+                }
                 if(att == 1) {
-                    console.log('output of neighbors: ' + this.pboard.neighbors([randx, randy]));
                     this.pboard.hit_neighbors = this.pboard.hit_neighbors.concat(this.pboard.neighbors([randx, randy]));
-                    console.log(this.pboard.hit_neighbors);
-                    // console.log(this.pboard.hit_neighbors);
                 }
             }
-            
+            if(this.pboard.standing.length == 0) return 69;
         },
         reset(player_place_random = false){
             this.aiboard = null; // reseting boards;
