@@ -16,7 +16,7 @@ function Ship(length){
 function Gameboard(){ // 10x10 board # x letters
     return {
         "hovering": [],
-        "curr_ship": Ship(0),
+        "curr_ship": Ship(2),
         "rotation": 0,
         "name": 'AI',
         "standing": [2, 3, 3, 4, 5],
@@ -36,7 +36,7 @@ function Gameboard(){ // 10x10 board # x letters
             [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
             [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
         ],
-        setCurrShip(len){
+        setCurrShip(len = this.ship_deck[0]){
             this.curr_ship = Ship(len);
         },
 

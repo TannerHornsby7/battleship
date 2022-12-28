@@ -158,12 +158,7 @@ function setDock(player, dock, ships_deck, placed = false){
         tmp_boat.onclick = function(e){
             let length = Math.floor(parseInt(e.target.style.width
                 .slice(0,-1)) / 20);
-            console.log(length);    
             let rotation = 0;
-            let idx = ships_deck.findIndex(
-                (val) => val == length
-            );
-            // ships_deck.splice(idx, 1);
             player.pboard.setCurrShip(length);
             console.log(player.pboard.curr_ship);
 
@@ -284,6 +279,7 @@ function setPBoard(player, b_ele, gameboard){
             }
             else if(!gameboard.board[i][j].length) {
                 tmp = emptyCell.cloneNode();
+                onPClick(player, tmp);
             }
             else {
                 tmp = yourCell.cloneNode();
@@ -329,7 +325,7 @@ function setPHover(player){
             let s = player.pboard.curr_ship;
             // console.log(s);
             if(s == undefined) return;
-            console.log(player.pboard.placeShip(s, [r, c], dir, true).length);
+            // console.log(player.pboard.placeShip(s, [r, c], dir, true).length);
             if(player.pboard.placeShip(s, [r, c], dir, true).length){
                 player.pboard.hovering = [];
                 player.pboard.placeShip(s, [r, c], dir, true).forEach((loc)=>{
@@ -337,28 +333,25 @@ function setPHover(player){
                 });
                 document.body.innerHTML = '';
                 layout(player);
-                console.log(player.pboard.hovering);
+                // console.log(player.pboard.hovering);
             }
         });
     });
 }
 
 function onPClick(player, cell){
+    if(!player.pboard.ship_deck.length) return;
     cell.addEventListener('click', ()=>{
+        console.log('clicked');
         let r = parseInt(cell.id.charAt(1));
         let c = parseInt(cell.id.charAt(3));
-        let spot = player.pboard.place;
-        if(wc == 0) {
-            return;
-        }
+        let idx = player.pboard.ship_deck.findIndex(
+            (val) => val == length
+        );
+        player.pboard.ship_deck.splice(idx, 1);
+        player.pboard.placeShip(player.curr_ship, [r, c], player.rotation);
+        console.log(player.pboard.ship_deck);
         document.body.innerHTML = '';
-        layout(player);
-        if(wc == 69) {
-            winCondition(player, 'p');
-        }
-        if(ap == 69) {
-            winCondition(player, 'c');
-        }
     });
 }
 
