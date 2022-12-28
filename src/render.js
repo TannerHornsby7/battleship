@@ -62,6 +62,8 @@ export function layout(player) {
     document.body.appendChild(b);
     document.body.appendChild(f);
 
+    // Setting hover
+    setPHover(player);
 }
 
 function setHead(h){
@@ -161,8 +163,9 @@ function setDock(player, dock, ships_deck, placed = false){
             let idx = ships_deck.findIndex(
                 (val) => val == length
             );
-            ships_deck.splice(idx, 1);
+            // ships_deck.splice(idx, 1);
             player.pboard.setCurrShip(length);
+            console.log(player.pboard.curr_ship);
 
             window.addEventListener('keydown', (ev)=>{
                 console.log(ev);
@@ -171,6 +174,8 @@ function setDock(player, dock, ships_deck, placed = false){
                     rotation %= 4;
                     console.log(rotation);
                     player.pboard.rotation = rotation;
+                    document.body.innerHTML = '';
+                    layout(player);
                 }
             });
         }
@@ -189,7 +194,7 @@ function setBoards(player, board_sect, eboard, pboard){
     const top_board = document.createElement('div');
     const bot_board = document.createElement('div');
     setEBoard(player, top_board, eboard);
-    setPBoard(bot_board, pboard);
+    setPBoard(player, bot_board, pboard);
     fullboard.appendChild(top_board);
     fullboard.appendChild(bot_board);
 
@@ -239,18 +244,20 @@ function setEBoard(player, b_ele, gameboard){
     }
 }
 
-function setPBoard(b_ele, gameboard){
+function setPBoard(player, b_ele, gameboard){
     b_ele.classList.add('board');
     const yourCell = document.createElement('div');
     const emptyCell = document.createElement('div');
     const hitCell = document.createElement('div');
     const missCell = document.createElement('div');
     const sunkCell = document.createElement('div');
-    hitCell.classList.add('hit', 'cell');
-    missCell.classList.add('miss', 'cell');
-    sunkCell.classList.add('sunk', 'cell');
-    yourCell.classList.add('yours', 'cell');
-    emptyCell.classList.add('empty', 'cell');
+    const hoverCell = document.createElement('div');
+    hitCell.classList.add('hit', 'cell', 'pcell');
+    missCell.classList.add('miss', 'cell', 'pcell');
+    sunkCell.classList.add('sunk', 'cell', 'pcell');
+    yourCell.classList.add('yours', 'cell', 'pcell');
+    emptyCell.classList.add('empty', 'cell', 'pcell');
+    hoverCell.classList.add('empty', 'hovering', 'cell', 'pcell');
 
     // 0 empty, 1 hit, 2 miss, 3 sunk, 4 your ship
     for(let i = 0; i < gameboard.board.length; i++){
@@ -272,6 +279,9 @@ function setPBoard(b_ele, gameboard){
                 x.textContent = 'X';
                 tmp.appendChild(x);
             }
+            else if(gameboard.hovering.includes(JSON.stringify([i, j]))){
+                tmp = hoverCell.cloneNode();
+            }
             else if(!gameboard.board[i][j].length) {
                 tmp = emptyCell.cloneNode();
             }
@@ -291,6 +301,53 @@ function onEClick(player, cell){
         let c = parseInt(cell.id.charAt(3));
         let wc = player.attackAI([r, c]);
         let ap = player.attackP();
+        if(wc == 0) {
+            return;
+        }
+        document.body.innerHTML = '';
+        layout(player);
+        if(wc == 69) {
+            winCondition(player, 'p');
+        }
+        if(ap == 69) {
+            winCondition(player, 'c');
+        }
+    });
+}
+
+function setPHover(player){
+    if(!player.pboard.ship_deck.length) return;
+    const cells = document.querySelectorAll('.pcell');
+    cells.forEach((cell)=>{
+        if(cell.classList.contains('yours')) {
+            return;
+        }
+        cell.addEventListener('mouseover', ()=>{
+            let r = parseInt(cell.id.charAt(1));
+            let c = parseInt(cell.id.charAt(3));
+            let dir = player.pboard.rotation;
+            let s = player.pboard.curr_ship;
+            // console.log(s);
+            if(s == undefined) return;
+            console.log(player.pboard.placeShip(s, [r, c], dir, true).length);
+            if(player.pboard.placeShip(s, [r, c], dir, true).length){
+                player.pboard.hovering = [];
+                player.pboard.placeShip(s, [r, c], dir, true).forEach((loc)=>{
+                    player.pboard.hovering.push(JSON.stringify(loc));
+                });
+                document.body.innerHTML = '';
+                layout(player);
+                console.log(player.pboard.hovering);
+            }
+        });
+    });
+}
+
+function onPClick(player, cell){
+    cell.addEventListener('click', ()=>{
+        let r = parseInt(cell.id.charAt(1));
+        let c = parseInt(cell.id.charAt(3));
+        let spot = player.pboard.place;
         if(wc == 0) {
             return;
         }

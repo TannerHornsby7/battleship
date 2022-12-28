@@ -175,6 +175,9 @@ body {
     }
     .empty {
       background-color: $lightcolor;
+      .hovering {
+        background-color: gray;
+      }
     }
   
     .miss {
@@ -197,6 +200,12 @@ body {
       background-color: black;
       color: rgb(154, 9, 9);
       font-weight: bolder;
+    }
+    .hovering {
+      background-color: lightslategray;
+      &:hover{
+        cursor: pointer;
+      }
     }
   }
   

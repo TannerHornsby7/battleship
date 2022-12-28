@@ -15,6 +15,7 @@ function Ship(length){
 // creates a gameboard which places ships and recieves attacks on its board
 function Gameboard(){ // 10x10 board # x letters
     return {
+        "hovering": [],
         "curr_ship": Ship(0),
         "rotation": 0,
         "name": 'AI',
@@ -81,7 +82,7 @@ function Gameboard(){ // 10x10 board # x letters
         },
 
         //places a ship given a loc and optional direction [0R,1D,2L,3U]
-        placeShip(ship, loc, direction = this.rotation) { 
+        placeShip(ship, loc, direction = this.rotation, check = false) { 
             let ship_locs = [];
 
             for(let i = 0; i < ship.length; i++){
@@ -107,6 +108,9 @@ function Gameboard(){ // 10x10 board # x letters
                     return false;
                 }
                 ship_locs.push(tmp_loc);
+            }
+            if(check){ // if its just a check, not a placement, we return the spots
+                return ship_locs;
             }
             ship_locs.forEach((seg) =>{
                 this.board[seg[0]][seg[1]] = ship;
