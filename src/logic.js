@@ -15,8 +15,9 @@ function Ship(length){
 // creates a gameboard which places ships and recieves attacks on its board
 function Gameboard(){ // 10x10 board # x letters
     return {
-        "standing": [10],
-        "ship_deck": [10],
+        "name": 'AI',
+        "standing": [2, 3, 3, 4, 5],
+        "ship_deck": [2, 3, 3, 4, 5],
         "hit_att": [],
         "miss_att": [],
         "board": [
