@@ -29,7 +29,7 @@ export function layout(player) {
     place_random.id = 'rp';
 
     setKey(key);
-    (ship_deck.length != 0) ? setDock(dock, ship_deck) : setDock(dock, sink_deck, true);
+    (ship_deck.length != 0) ? setDock(player, dock, ship_deck) : setDock(player, dock, sink_deck, true);
     place_random.textContent = 'PLACE MY SHIPS';
     place_random.onclick = () => {
         player.reset(true);
@@ -127,7 +127,7 @@ function setKey(key){
 
 }
 
-function setDock(dock, ships_deck, placed = false){
+function setDock(player, dock, ships_deck, placed = false){
     const dock_head = document.createElement('h2');
     const boat_lot = document.createElement('div');
     const boat = document.createElement('div');
@@ -136,6 +136,7 @@ function setDock(dock, ships_deck, placed = false){
     dock.classList.add('dock');
     boat.textContent = '';
     boat.classList.add('boat');
+
     boat_lot.classList.add('boat_lot');
 
     if(placed) {
@@ -152,9 +153,29 @@ function setDock(dock, ships_deck, placed = false){
         let tmp_boat = boat.cloneNode();
         let ship_length = Math.floor(ships_deck[i] / 5 * 100);
         tmp_boat.setAttribute("style",`width:${ship_length}%`);
+        tmp_boat.onclick = function(e){
+            let length = Math.floor(parseInt(e.target.style.width
+                .slice(0,-1)) / 20);
+            console.log(length);    
+            let rotation = 0;
+            let idx = ships_deck.findIndex(
+                (val) => val == length
+            );
+            ships_deck.splice(idx, 1);
+            player.pboard.setCurrShip(length);
+
+            window.addEventListener('keydown', (ev)=>{
+                console.log(ev);
+                if(ev.key == 'r'){
+                    rotation += 1;
+                    rotation %= 4;
+                    console.log(rotation);
+                    player.pboard.rotation = rotation;
+                }
+            });
+        }
         boat_lot.appendChild(tmp_boat);
     }
-    
 
     dock.appendChild(dock_head);
     dock.appendChild(boat_lot);
@@ -209,7 +230,7 @@ function setEBoard(player, b_ele, gameboard){
             }
             else {
                 tmp = emptyCell.cloneNode();
-                addEventListener(player, tmp);
+                onEClick(player, tmp);
             }
             tmp.id = 'r' + i + 'c' + j;
 
@@ -264,7 +285,7 @@ function setPBoard(b_ele, gameboard){
     }
 }
 
-function addEventListener(player, cell){
+function onEClick(player, cell){
     cell.addEventListener('click', ()=>{
         let r = parseInt(cell.id.charAt(1));
         let c = parseInt(cell.id.charAt(3));

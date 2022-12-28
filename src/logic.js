@@ -15,6 +15,8 @@ function Ship(length){
 // creates a gameboard which places ships and recieves attacks on its board
 function Gameboard(){ // 10x10 board # x letters
     return {
+        "curr_ship": Ship(0),
+        "rotation": 0,
         "name": 'AI',
         "standing": [2, 3, 3, 4, 5],
         "ship_deck": [2, 3, 3, 4, 5],
@@ -33,6 +35,9 @@ function Gameboard(){ // 10x10 board # x letters
             [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
             [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
         ],
+        setCurrShip(len){
+            this.curr_ship = Ship(len);
+        },
 
         // determines validity of location
         validLoc(loc, place = false){
@@ -76,7 +81,7 @@ function Gameboard(){ // 10x10 board # x letters
         },
 
         //places a ship given a loc and optional direction [0R,1D,2L,3U]
-        placeShip(ship, loc, direction = 0) { 
+        placeShip(ship, loc, direction = this.rotation) { 
             let ship_locs = [];
 
             for(let i = 0; i < ship.length; i++){
