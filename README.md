@@ -8,7 +8,7 @@ Fully Functional in-browser battleship game
 
 ## LIVE DEMO
 
-[here](https://github.com/TannerHornsby7/odin-battleship)
+[here](https://tannerhornsby7.github.io/odin-battleship/)
 
 ## SKILLS
   
