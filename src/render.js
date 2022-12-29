@@ -305,6 +305,10 @@ function setPBoard(player, b_ele, gameboard){
 
 function onEClick(player, cell){
     cell.addEventListener('click', ()=>{
+        if(player.pboard.ship_deck.length) {
+            alert('Place Your Ships Before Attacking!');
+            return;
+        }
         let r = parseInt(cell.id.charAt(1));
         let c = parseInt(cell.id.charAt(3));
         let wc = player.attackAI([r, c]);
