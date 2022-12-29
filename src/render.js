@@ -2,6 +2,17 @@ import './style.scss';
 
 // RENDERS THE GAME
 export function layout(player) {
+    window.onkeydown = (ev)=>{
+        if(ev.keyCode == 13){
+            setPClick(player);
+            if(!player.pboard.ship_deck.length) {
+                document.body.innerHTML = '';
+                player.setAI();
+                layout(player);
+            }
+        }
+        console.log('entered!');
+    };
     // LOCAL VARIABLES FOR EASIER UNDERSTANDING
     let eboard = player.aiboard;
     let pboard = player.pboard;
@@ -252,9 +263,8 @@ function setPBoard(player, b_ele, gameboard){
     sunkCell.classList.add('sunk', 'cell', 'pcell');
     yourCell.classList.add('yours', 'cell', 'pcell');
     emptyCell.classList.add('empty', 'cell', 'pcell');
-    hoverCell.classList.add('empty', 'hovering', 'cell', 'pcell');
+    hoverCell.classList.add('hovering', 'cell', 'pcell');
 
-    // 0 empty, 1 hit, 2 miss, 3 sunk, 4 your ship
     for(let i = 0; i < gameboard.board.length; i++){
         for(let j = 0; j < gameboard.board.length; j++){
             let tmp;
@@ -274,15 +284,17 @@ function setPBoard(player, b_ele, gameboard){
                 x.textContent = 'X';
                 tmp.appendChild(x);
             }
-            else if(gameboard.hovering.includes(JSON.stringify([i, j]))){
-                tmp = hoverCell.cloneNode();
+            else if(gameboard.board[i][j].length) {
+                console.log('your boat is placed at '+ i +' , '+ j);
+                tmp = yourCell.cloneNode();
             }
-            else if(!gameboard.board[i][j].length) {
-                tmp = emptyCell.cloneNode();
-                onPClick(player, tmp);
+            else if(gameboard.hovering.includes(JSON.stringify([i, j]))){
+                // console.log('hovering!')
+                tmp = hoverCell.cloneNode();
+                // console.log('added click listener to ' + tmp);
             }
             else {
-                tmp = yourCell.cloneNode();
+                tmp = emptyCell.cloneNode();
             }
 
             tmp.id = 'r' + i + 'c' + j;
@@ -323,36 +335,35 @@ function setPHover(player){
             let c = parseInt(cell.id.charAt(3));
             let dir = player.pboard.rotation;
             let s = player.pboard.curr_ship;
-            // console.log(s);
             if(s == undefined) return;
-            // console.log(player.pboard.placeShip(s, [r, c], dir, true).length);
             if(player.pboard.placeShip(s, [r, c], dir, true).length){
                 player.pboard.hovering = [];
                 player.pboard.placeShip(s, [r, c], dir, true).forEach((loc)=>{
                     player.pboard.hovering.push(JSON.stringify(loc));
-                });
-                document.body.innerHTML = '';
-                layout(player);
-                // console.log(player.pboard.hovering);
+            });
+
+            document.body.innerHTML = '';
+            layout(player);
             }
         });
     });
 }
 
-function onPClick(player, cell){
+function setPClick(player){
     if(!player.pboard.ship_deck.length) return;
-    cell.addEventListener('click', ()=>{
-        console.log('clicked');
-        let r = parseInt(cell.id.charAt(1));
-        let c = parseInt(cell.id.charAt(3));
-        let idx = player.pboard.ship_deck.findIndex(
-            (val) => val == length
-        );
-        player.pboard.ship_deck.splice(idx, 1);
-        player.pboard.placeShip(player.curr_ship, [r, c], player.rotation);
-        console.log(player.pboard.ship_deck);
-        document.body.innerHTML = '';
-    });
+    if(!player.pboard.hovering.length) return;
+    let spot = player.pboard.hovering[0];
+    let r = parseInt(spot.charAt(1));
+    let c = parseInt(spot.charAt(3));
+    let idx = player.pboard.ship_deck.findIndex(
+        (val) => val == player.pboard.curr_ship.length
+    );
+    player.pboard.ship_deck.splice(idx, 1);
+    player.pboard.placeShip(player.pboard.curr_ship, [r, c], player.rotation);
+    player.pboard.setCurrShip();
+    if(!player.pboard.ship_deck.length) {
+        player.pboard.hovering = [];
+    }
 }
 
 function winCondition(player, param){

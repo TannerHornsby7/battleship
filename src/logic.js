@@ -16,11 +16,11 @@ function Ship(length){
 function Gameboard(){ // 10x10 board # x letters
     return {
         "hovering": [],
-        "curr_ship": Ship(2),
+        "ship_deck": [2, 3, 3, 4, 5],
+        "standing": [2, 3, 3, 4, 5],
+        "curr_ship": undefined,
         "rotation": 0,
         "name": 'AI',
-        "standing": [2, 3, 3, 4, 5],
-        "ship_deck": [2, 3, 3, 4, 5],
         "hit_neighbors": [],
         "hit_att": [],
         "miss_att": [],
@@ -176,6 +176,9 @@ function Player(){
         "aiboard": Gameboard(),
         attackAI(loc){
             return this.aiboard.recieveAttack(loc);
+        },
+        setAI(){
+            this.aiboard.placeRandomShips();
         },
         attackP(){
             if(this.hard && this.pboard.hit_neighbors.length){
