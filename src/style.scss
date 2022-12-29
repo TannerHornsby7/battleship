@@ -157,13 +157,6 @@ body {
       padding: none;
       box-sizing: border-box;
     }
-    .ecell {
-      &:hover {
-        cursor: pointer;
-        transition: all 0.2s ease;
-        background-color: white;
-      }
-    }
     p{
       padding: 0px;
       margin: 0px;
@@ -205,6 +198,13 @@ body {
       background-color: lightslategray;
       &:hover{
         cursor: pointer;
+      }
+    }
+    .ecell {
+      &:hover {
+        cursor: crosshair;
+        transition: all 0.2s ease;
+        background-color: white;
       }
     }
   }

@@ -158,7 +158,7 @@ function setDock(player, dock, ships_deck, placed = false){
         dock_footer.textContent = 'Keep Firing!'
     } else {
         dock_head.textContent = 'Place Your Ships';
-        dock_footer.textContent = 'Press R to rotate a ship!'
+        dock_footer.textContent = 'Click one of the ships above to select it, press R to rotate it, and press enter to place it!'
     }
 
     ships_deck.sort();
