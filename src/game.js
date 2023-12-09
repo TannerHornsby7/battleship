@@ -1,9 +1,10 @@
-import { Player } from "./logic";
+import { Game } from "./logic";
 import { layout } from "./render"
 
 function main(){
-    const player = Player();
-    layout(player);
+    const game = Game();
+    game.init();
+    layout(game);
 }
 
 main();
