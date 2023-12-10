@@ -348,8 +348,6 @@ function attachAttackListener(cell_id, game) {
     });
 }
 
-
-
 function winCondition(game) {
     document.body.innerHTML = '';
     const end_screen = document.createElement('div');
@@ -428,10 +426,14 @@ function buildResetSection(game, reset_sect) {
     }
 }
 
-// function newGameForm(){
-
-// }
-
-
+// ==========================To Do==========================
+// redo logic.test.js
 // fix hover functionality
-// complete game ending functionality
+// clean up logic.js
+// write out readme with logic for probabilistic (hard) mode
+// ---evaluate using bayesian search algorithm
+// ---evaluate using greedy search algorithm
+// ==========================Future Features==========================
+// connect to backend with sign-in, leaderboard, and stats
+// add network pvp mode
+// add ai mode

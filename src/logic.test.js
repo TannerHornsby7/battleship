@@ -3,7 +3,7 @@ import { Ship, Board, Game } from './logic';
 import { game_status } from './logic';
 
 // test that when reset is called, the boards are cleaned to be all zeros
-test('reset() resets boards', () => {
+test('reset() correctly resets boards', () => {
     const test_game = Game();
     test_game.init();
     const ship = Ship(1);
