@@ -30,6 +30,10 @@ body {
   place-items: center;
   @include theme;
   height: 100px;
+  .status {
+    font-size: medium;
+    padding: 15px;
+  }
   button {
     font-size: .5em;
     height: 40px;
@@ -258,10 +262,29 @@ body {
   }
 }
 
+.returnbtn {
+  min-height: 50px;
+  background-color: black;
+  color: whitesmoke;
+  &:hover{
+    cursor: pointer;
+    background-color: $lightcolor;
+    border: 2px solid black;
+    color: black;
+  }
+}
+
 .gg{
   display: grid;
   width: 100%;
   height: 100%;
-  font-size: 5em;
+  font-size: 3em;
+  place-content: center;
+}
+
+.win_div{
+  display: grid;
+  width: 100%;
+  font-size: 3em;
   place-content: center;
 }

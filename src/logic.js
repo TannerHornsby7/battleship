@@ -12,7 +12,6 @@ function Ship(length) {
     }
 }
 
-
 let run_cnt = 0 
 const TOTAL_SHIPS = [5, 4, 3, 3, 2]
 
@@ -186,6 +185,7 @@ function Board() { // 10x10 board # x letters
         // The first element in the list is the direction with longest run
         // in it's direction. The second element in the list is the location with the
         strengthSortedDirections(loc) {
+            let maintenence_loc = [...loc];
             let res = [];
             let directions = this.validDirections(loc);
             directions.forEach((dir) => {
@@ -209,6 +209,16 @@ function Board() { // 10x10 board # x letters
                         default:
                             console.log('invalid direction: ' + dir);
                     }
+                    maintenence_loc = tmp_loc;
+                }
+                // if its invalid because its off the board, we should subtract one
+                // from the count, if its invalid because its a miss, we should
+                // subtract 2 from the count
+                const out_of_bounds = (maintenence_loc[0] < 0 || maintenence_loc[0] > 9 ||
+                    maintenence_loc[1] < 0 || maintenence_loc[1] > 9)
+                
+                if (!out_of_bounds && this.board[maintenence_loc[0]][maintenence_loc[1]] == 1) {
+                    tmp_cnt -= 1;
                 }
                 res.push([dir, tmp_cnt]);
             });
@@ -274,13 +284,16 @@ function Board() { // 10x10 board # x letters
                     // console.log(direction_strengths)
                     let left_right_strength = Math.min(direction_strengths['left'], direction_strengths['right'])
                     let up_down_strength = Math.min(direction_strengths['up'], direction_strengths['down'])
+                    // RESEARCH FURTHER
                     score = left_right_strength + up_down_strength
                     // console.log('raw direction based score is', score)
 
                     // boost middle locations by using an inverse quadratic multiplier to the score
                     let dist = Math.sqrt(Math.pow(4.5 - loc[0], 2) + Math.pow(4.5 - loc[1], 2))
                     // we add because we really only want this to break ties
-                    score = score + (1 / Math.pow(dist, 2))
+                    // pick a random number between 0 and .000001
+                    let rand = Math.random() / 1000000
+                    score = score + rand
                     // console.log(score)
                     if (searchDepth > 1 || debug) {
                         scores.push([loc, score])
@@ -327,12 +340,12 @@ const game_status = {
 }
 
 const readable_status = {
-    1: "Player 1 is setting up their board",
-    2: "Player 2 is setting up their board",
-    3: "Player 1's turn",
-    4: "Player 2's turn",
-    5: "Player 1 wins!",
-    6: "Player 2 wins!",
+    1: " is setting up their board",
+    2: " is setting up their board",
+    3: "'s turn",
+    4: "'s turn",
+    5: " wins!",
+    6: " wins!",
 }
 
 // creates a Game with two players who perform actions on their boards
@@ -347,6 +360,12 @@ function Game() {
         "eboard": 'bananas',
         "p1_name": 'Human',
         "p2_name": 'AI',
+        "turns": -2, // to account for 2 set calls
+        readable_status(input) {
+            let player = this.pboard == this.p1board ? this.p1_name : this.p2_name;
+            return player + readable_status[input];
+        },
+
         // initialize the boards
         init() {
             this.pboard = this.p1board;
@@ -418,6 +437,8 @@ function Game() {
                 this.status == game_status.p2_win) {
                 return (this.pboard == this.p1board) ? 'Player 1' : 'Player 2';
             }
+            this.turns = this.turns + 1;
+            console.log(this.turns)
             if (this.pboard == this.p1board) {
                 this.pboard = this.p2board;
                 this.eboard = this.p1board;

@@ -1,15 +1,6 @@
 import './style.scss';
 import { game_status } from './logic';
 
-const readable_status = {
-    1: "Player 1 is setting up their board",
-    2: "Player 2 is setting up their board",
-    3: "Player 1's turn",
-    4: "Player 2's turn",
-    5: "Player 1 wins!",
-    6: "Player 2 wins!",
-}
-
 // takes a game 
 export function layout(game) {
     // clear the page
@@ -30,7 +21,7 @@ export function layout(game) {
     const b = document.createElement('div');
     const f = document.createElement('div');
 
-    buildHeader(h);
+    buildHeader(h, game);
     buildFooter(f);
 
     b.classList.add('body');
@@ -84,10 +75,20 @@ export function layout(game) {
     // setPHover(game);
 }
 
-function buildHeader(h) {
-    const empty = document.createElement('div');
-    empty.textContent = '';
+function buildHeader(h, game) {
+    const status = document.createElement('div');
+    if (game.mode == 'easy') {
+        status.textContent = 'EASY MODE';
+    }
+    else if (game.mode == 'hard') {
+        status.textContent = 'HARD MODE';
+    } else {
+        status.textContent = game.readable_status(game.status);
+    }
+
+    status.classList.add('status');
     h.classList.add('head');
+
     const title = document.createElement('h1');
     const gh = document.createElement('button');
 
@@ -97,7 +98,7 @@ function buildHeader(h) {
         open('https://github.com/TannerHornsby7/odin-battleship');
     };
 
-    h.appendChild(empty);
+    h.appendChild(status);
     h.appendChild(title);
     h.appendChild(gh);
 }
@@ -331,6 +332,7 @@ function attachAttackListener(cell_id, game) {
             // display the pass to player 2 screen
             const pass_screen = document.createElement('div');
             pass_screen.classList.add('pass');
+            pass_screen.classList.add('gg')
 
             let player = (game.status == game_status.p1_turn) ? game.p1_name : game.p2_name;
 
@@ -351,16 +353,34 @@ function attachAttackListener(cell_id, game) {
 function winCondition(game) {
     document.body.innerHTML = '';
     const end_screen = document.createElement('div');
-    end_screen.classList.add('gg');
     // display which player won
-    const win = document.createElement('h2');
+    const win_div = document.createElement('div');
+    const win = document.createElement('h1');
+    win_div.classList.add('win_div');
     win.textContent = (game.status == game_status.p1_win ? game.p1_name : game.p2_name) + ' WINS!';
-    end_screen.appendChild(win);
-    document.body.appendChild(end_screen);
+    // add a section that says how many ships the enemy had left
+    const ships_left = document.createElement('h3');
+    ships_left.textContent = 'in only ' + Math.floor(game.turns / 2) + ' turns!';
+    // append header
+    const header = document.createElement('div');
+    buildHeader(header, game);
+    end_screen.appendChild(header);
     game.reset();
-    setTimeout(function () {
+    // add a button to return
+    const return_btn = document.createElement('button');
+    return_btn.textContent = 'RETURN';
+    return_btn.classList.add('return');
+    return_btn.onclick = () => {
         layout(game);
-    }, 3000);
+    }
+    return_btn.classList.add('returnbtn');
+    win_div.appendChild(win);
+    win_div.appendChild(ships_left);
+    win_div.appendChild(return_btn);
+    end_screen.appendChild(win_div);
+    document.body.appendChild(end_screen);
+
+    
 }
 
 function buildResetSection(game, reset_sect) {
