@@ -309,7 +309,7 @@ function attachAttackListener(cell_id, game) {
             layout(game);
             return;
         }
-        
+
         // update the cell based on the attack
         if (att == 'miss') {
             cell.classList.add('miss');
@@ -327,24 +327,22 @@ function attachAttackListener(cell_id, game) {
             x.textContent = 'X';
             cell.appendChild(x);
         }
+        document.body.innerHTML = '';
+        // display the pass to player 2 screen
+        const pass_screen = document.createElement('div');
+        pass_screen.classList.add('pass');
+        pass_screen.classList.add('gg')
+
+        let player = (game.status == game_status.p1_turn) ? game.p1_name : game.p2_name;
+
+        const pass = document.createElement('h2');
+        pass.textContent = 'PASS TO ' + player;
+        pass_screen.appendChild(pass);
+        document.body.appendChild(pass_screen);
         setTimeout(function () {
-            document.body.innerHTML = '';
-            // display the pass to player 2 screen
-            const pass_screen = document.createElement('div');
-            pass_screen.classList.add('pass');
-            pass_screen.classList.add('gg')
 
-            let player = (game.status == game_status.p1_turn) ? game.p1_name : game.p2_name;
-
-            const pass = document.createElement('h2');
-            pass.textContent = 'PASS TO ' + player;
-            pass_screen.appendChild(pass);
-            document.body.appendChild(pass_screen);
-            setTimeout(function () {
-
-                layout(game);
-            }, 3000);
-        }, 1000);
+            layout(game);
+        }, 3000);
     });
 }
 
@@ -378,7 +376,7 @@ function winCondition(game) {
     end_screen.appendChild(win_div);
     document.body.appendChild(end_screen);
 
-    
+
 }
 
 function buildResetSection(game, reset_sect) {
@@ -433,6 +431,7 @@ function buildResetSection(game, reset_sect) {
 // write out readme with logic for probabilistic (hard) mode
 // ---evaluate using bayesian search algorithm
 // ---evaluate using greedy search algorithm
+// get the numbers on each approach with an automated test
 // ==========================Future Features==========================
 // connect to backend with sign-in, leaderboard, and stats
 // add network pvp mode

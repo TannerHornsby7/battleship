@@ -611,6 +611,7 @@ function Game() {
             this.eboard = null;
             this.p1board = null;
             this.p2board = null;
+            this.turns = -2;
             this.status = game_status.p1_setting_up;
             this.mode = "easy";
             this.p1board = Board();
