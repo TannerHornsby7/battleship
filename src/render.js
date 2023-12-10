@@ -1,6 +1,15 @@
 import './style.scss';
 import { game_status } from './logic';
 
+const readable_status = {
+    1: "Player 1 is setting up their board",
+    2: "Player 2 is setting up their board",
+    3: "Player 1's turn",
+    4: "Player 2's turn",
+    5: "Player 1 wins!",
+    6: "Player 2 wins!",
+}
+
 // takes a game 
 export function layout(game) {
     // clear the page
@@ -38,9 +47,9 @@ export function layout(game) {
     place_random.textContent = 'PLACE MY SHIPS';
     place_random.onclick = () => {
         game.autoSet();
-        console.log(game.pboard)
-        // set innerHTML to empty string to clear the page
-
+        if (game.mode == 'easy' || game.mode == 'hard') {
+            game.autoSet();
+        }
         layout(game);
     }
 
@@ -272,13 +281,8 @@ function setBoard(b_ele, board, enemy = false) {
 function attachAttackListener(cell_id, game) {
     let cell = document.getElementById(cell_id);
     cell.addEventListener('click', () => {
-        console.log(cell.id)
         if (game.status < game_status["p1_turn"]) {
             alert('Please place your ships first!');
-            return;
-        }
-        if (game.status == game_status["p1_win"] || game.status == game_status["p2_win"]) {
-            alert('Game Over! Please reset to play again!');
             return;
         }
         let i = parseInt(cell.id.charAt(2));
@@ -288,13 +292,23 @@ function attachAttackListener(cell_id, game) {
             alert('Invalid Attack!');
             return;
         }
+        // if the game is over, we should display the win screen
+        if (game.status == game_status.p1_win || game.status == game_status.p2_win) {
+            winCondition(game);
+            return;
+        }
         // if its ai mode, we should autoattack the player
         if (game.mode == 'easy' || game.mode == 'hard') {
-            let ai_att = game.aiAttack();
+            console.log(game.aiAttack());
+            // if the game is over, we should display the win screen
+            if (game.status == game_status.p1_win || game.status == game_status.p2_win) {
+                winCondition(game);
+                return;
+            }
             layout(game);
             return;
         }
-
+        
         // update the cell based on the attack
         if (att == 'miss') {
             cell.classList.add('miss');
@@ -307,25 +321,18 @@ function attachAttackListener(cell_id, game) {
             cell.classList.add('sunk');
         }
         else {
-            console.log(att);
             cell.classList.add('hit');
             const x = document.createElement('p');
             x.textContent = 'X';
             cell.appendChild(x);
         }
-        // if the mode is pvp, we should give the players a bit of time to see the result of the attack
-        // then we should wipe the screen and display a new screen that says pass to player 2
-        // then we should rerender the game
-        console.log('pvpvpvpv')
-
-        // layout(game);
         setTimeout(function () {
             document.body.innerHTML = '';
             // display the pass to player 2 screen
             const pass_screen = document.createElement('div');
             pass_screen.classList.add('pass');
 
-            let player = (game.status == game_status["p1_turn"]) ? 'PLAYER 2' : 'PLAYER 1';
+            let player = (game.status == game_status.p1_turn) ? game.p1_name : game.p2_name;
 
             const pass = document.createElement('h2');
             pass.textContent = 'PASS TO ' + player;
@@ -339,15 +346,19 @@ function attachAttackListener(cell_id, game) {
     });
 }
 
+
+
 function winCondition(game) {
-    game.reset();
     document.body.innerHTML = '';
     const end_screen = document.createElement('div');
     end_screen.classList.add('gg');
-    end_screen.textContent = (param == 'p') ? 'User Wins' : 'AI Wins';
+    // display which player won
+    const win = document.createElement('h2');
+    win.textContent = (game.status == game_status.p1_win ? game.p1_name : game.p2_name) + ' WINS!';
+    end_screen.appendChild(win);
     document.body.appendChild(end_screen);
-    buildTimeout(function () {
-
+    game.reset();
+    setTimeout(function () {
         layout(game);
     }, 3000);
 }
@@ -361,7 +372,8 @@ function buildResetSection(game, reset_sect) {
     pvp.onclick = () => {
         game.reset();
         game.mode = 'pvp';
-
+        game.p1_name = prompt('Player 1, enter your name:').toUpperCase();
+        game.p2_name = prompt('Player 2, enter your name:').toUpperCase();
         layout(game);
     }
 
@@ -371,8 +383,8 @@ function buildResetSection(game, reset_sect) {
     easy.classList.add('easybtn');
     reset_sect.appendChild(easy);
     easy.onclick = () => {
+        game.reset();
         game.mode = 'easy';
-
         layout(game);
     }
     // hard mode btn
@@ -381,8 +393,8 @@ function buildResetSection(game, reset_sect) {
     hard.classList.add('hardbtn');
     reset_sect.appendChild(hard);
     hard.onclick = () => {
+        game.reset();
         game.mode = 'hard';
-
         layout(game);
     }
 
@@ -392,7 +404,6 @@ function buildResetSection(game, reset_sect) {
     reset_sect.appendChild(reset);
     reset.onclick = () => {
         game.reset();
-
         layout(game);
     }
 }
@@ -403,4 +414,4 @@ function buildResetSection(game, reset_sect) {
 
 
 // fix hover functionality
-// fix attack listener
+// complete game ending functionality
