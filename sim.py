@@ -1,0 +1,1 @@
+# a simulator for battleship, takes a board and a list of remaining
