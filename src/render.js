@@ -194,7 +194,7 @@ function setDock(dock, game, placed = false) {
 
     dock.appendChild(dock_head);
     dock.appendChild(boat_lot);
-    dock.appendChild(dock_footer);
+    // dock.appendChild(dock_footer);
 }
 
 function buildBoards(game, board_sect) {
@@ -290,7 +290,7 @@ function attachAttackListener(cell_id, game) {
         let j = parseInt(cell.id.charAt(4));
         let att = game.attack([i, j]);
         if (att == false) {
-            alert('Invalid Attack!');
+            // alert('Invalid Attack!');
             return;
         }
         // if the game is over, we should display the win screen
